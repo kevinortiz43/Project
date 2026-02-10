@@ -15,17 +15,10 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "csv-manual": "tsx ./src/server/sql_db/convertData_manual.ts",
-    "csv-module": "tsx ./src/server/sql_db/convertData_module.ts",
     "csv-agno": "tsx ./src/server/sql_db/convertData_agnostic.ts",
-    "seed-supabase": "tsx ./src/server/sql_db/seed.ts supabase",
-    "seed-local": "tsx ./src/server/sql_db/seed_local.ts",
     "seed-agno": "tsx ./src/server/sql_db/seed_agnostic.ts",
-    "types-supabase": "tsx ./src/server/sql_db/generateSchema.ts",
-    "types-local": "tsx ./src/server/sql_db/generateSchema_local.ts",
     "types-agno": "tsx ./src/server/sql_db/generateSchema_agnostic.ts",
-    "db-setup-agno": "npm run csv-agno && npm run seed-agno && npm run types-agno",
-    "db-setup-localLinux": "npm run csv-module && npm run seed-local && npm run types-local"
+    "db-setup-agno": "npm run csv-agno && npm run seed-agno && npm run types-agno"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.1.0",

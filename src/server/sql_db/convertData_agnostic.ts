@@ -2,36 +2,41 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Parser } from '@json2csv/plainjs';
+// https://www.npmjs.com/package/json2csv
 
-// OS-agnostic path handling
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const dataDir = (file: string) => path.join(__dirname, "..", "data", file);
 
-// OPTION 1: using json2csv module
+// define paths
+const __dirname = path.dirname(fileURLToPath(import.meta.url)); // current working directory
+const dataDir = (file: string) => path.join(__dirname, "..", "data", file); // data folder path
+
+// use json2csv module
 export async function convertRelayJSONToCSV(
   filename: string
 ): Promise<{ csvContent: string; recordCount: number; headers: string[] }> {
-  // OS-agnostic file reading with explicit encoding
+  // OS-agnostic file reading with explicit encoding to read and parse each JSON file
   const filePath = dataDir(filename);
   const fileContent = fs.readFileSync(filePath, { encoding: "utf8" });
   const parsedFile = JSON.parse(fileContent);
   
-  // extract Relay structure
-  const topLevelKeys = Object.keys(parsedFile.data || {});
-  if (topLevelKeys.length === 0) {
-    throw new Error(`No data found in ${filename}`);
+  // dynamically find edges array in relay-like structure
+  // Ex: data.allTrustControls.edges or data.allTrustFaqs.edges
+  const topLevelKeys = Object.keys(parsedFile.data || {}); // Ex: 'allTrustFaqs' key
+  if (topLevelKeys.length === 0) { // check to make sure data obj isn't empty
+    throw new Error(`No data found in ${filename}`); 
   }
   
-  const dataKey = topLevelKeys[0];
-  const edges = parsedFile.data[dataKey].edges;
-  
+ // get 1st top-level key (e.g., "allTrustControls" or "allTrustFaqs")
+  const dataKey = topLevelKeys[0]; // take only 1st nested obj (value of "allTrustFaqs")
+  const edges = parsedFile.data[dataKey].edges; // get 1st nested obj's edges array
+
+ // check to make sure there ARE edges
   if (!edges || edges.length === 0) {
     throw new Error(`No edges found in ${filename}`);
   }
   
   // extract nodes from edges
-  const nodes = edges.map((edge: any) => edge.node);
-  const fields = Object.keys(nodes[0]);
+  const nodes = edges.map((edge: any) => edge.node); 
+  const fields = Object.keys(nodes[0]); // get fields from only 1st node (assumes all other nodes have SAME fields)
   
   // use json2csv to parse
   const parser = new Parser({ fields });
