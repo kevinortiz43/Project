@@ -1,0 +1,170 @@
+/* TrustCenter.css */
+.trusts_container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.trusts_header {
+  background-color: #ffffff;
+  padding: 32px;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.trusts_title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
+  font-family: Arial, sans-serif;
+}
+
+.trusts_subtitle {
+  font-size: 15px;
+  color: #666666;
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+/* .trusts_list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+} */
+
+.trusts_list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 16px;
+}
+
+.trust_card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+  transition: box-shadow 250ms;
+}
+
+.trust_card:hover {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+}
+
+.trust_button {
+  width: 100%;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  text-align: left;
+  font-family: Arial, sans-serif;
+}
+
+.trust_header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 24px;
+  transition: background-color 150ms;
+}
+
+.trust_button:hover .trust_header,
+.trust_button.active .trust_header {
+  background-color: #f8f9fa;
+}
+
+.trust_button.active .trust_header {
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.trust_icon_wrapper {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e3f2fd;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.trust_icon {
+  color: #0066cc;
+  font-size: 20px;
+}
+
+.trust_text {
+  flex: 1;
+  min-width: 0;
+}
+
+.trust_question {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 4px 0;
+  font-family: Arial, sans-serif;
+}
+
+.trust_category {
+  font-size: 13px;
+  color: #999999;
+  font-family: Arial, sans-serif;
+}
+
+.trust_chevron {
+  color: #999999;
+  transition: transform 150ms;
+  flex-shrink: 0;
+}
+
+.trust_chevron.rotated {
+  transform: rotate(180deg);
+}
+
+.trust_answer {
+  margin-top: 16px;
+  gap: 16px 24px;
+  padding: 0 24px 24px 24px;
+  animation: slideDown 250ms ease-in-out;
+}
+
+.trust_answer p {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: #666666;
+  font-family: Arial, sans-serif;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .trusts_header {
+    padding: 24px;
+  }
+
+  .trusts_title {
+    font-size: 24px;
+  }
+
+  .trusts_header {
+    padding: 16px;
+  }
+
+  .trusts_answer {
+    padding: 0 16px 16px 16px;
+  }
+}
