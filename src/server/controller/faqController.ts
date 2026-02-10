@@ -6,7 +6,7 @@ export default {
       const result = await dataService.getFaqs();
 
       if (!result) {
-        res.locals.dbResults = "No FAQ controller data";
+        res.locals.dbResults = "No FAQs controller data";
         return next();
       }
 

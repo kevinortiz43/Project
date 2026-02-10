@@ -11,7 +11,7 @@
    b. "npm run seed-agno" which runs src/server/sql_db/seed_agnostic.ts that seeds the local postgreSQL database on port 5432 with data from all converted .csv files.
    c. "npm run types-agno" which runs src/server/sql_db/types-agno that generates Typescript schemas from database data
 4. The docker container monitor for file changes to automatically sync updates to running containers without manual rebuilds.
-5. If you run into an error during Step #2 due to postgres already occupying port 5432, make sure to stop postgres to free up port 5432. Then run "npm run devo" again.
+5. If you run into an error during Step #2 due to postgres already occupying port 5432, make sure to stop postgres to free up port 5432. Then run "npm run devo" again. (On Linux, you might have to run "sudo systemctl stop postgresql" to free up port 5432. If you get "Error connecting to Docker PostgreSQL: ECONNRESET" after freeing up port 5432, run "npm run devo" again.)
 6. To see all scripts, see package.json file.
 7. You can visit http://localhost:5173/ to view the frontend, i.e. active application, which shows Trust Controls and FAQs with the appropriate data fetched from the offline postgreSQL database.
 8. A simple keyword search is displayed at the top of the page, and it should be used for filtering categories.

@@ -6,7 +6,7 @@ export default {
       const result = await dataService.getControls();
 
       if (!result) {
-        res.locals.dbResults = "No Teams controller data";
+        res.locals.dbResults = "No Trust controller data";
         return next();
       }
 
