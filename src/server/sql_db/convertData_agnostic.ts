@@ -4,7 +4,7 @@ import { fileURLToPath } from "url";
 import { Parser } from "@json2csv/plainjs";
 // use json2csv module: https://www.npmjs.com/package/@json2csv/plainjs 
 // The script handles GraphQL Relay-style JSON responses, converts them to CSV format, and can be used as standalone CLI tool.
-// Note: This is good enough for relatively flat data, NOT for deeply nested, complex data.
+// Note: As a team we decided that this is good enough for relatively flat data, NOT for deeply nested, complex data.
 
 // define paths
 const __dirname = path.dirname(fileURLToPath(import.meta.url)); // current directory of this script file

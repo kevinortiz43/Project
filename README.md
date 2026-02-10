@@ -1,7 +1,6 @@
 # React + TypeScript + Vite + Docker + PostgreSQL
 
-This template provides a minimal setup to get the dockerized application running.
-
+## This template provides a minimal setup to get the dockerized application running.
 
 # Executing npm run devo command for application startup
 

@@ -73,6 +73,8 @@ router.post("/admin/clear-cache", (req, res) => {
     vsize: statsReset.vsize,
   });
 });
+
+// Note: This route is still buggy (only fix if have time)
 router.get("/admin/cache-stats", (_, res) => {
   const stats = getCacheStats();
   res.json({

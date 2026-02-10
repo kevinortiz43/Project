@@ -99,6 +99,12 @@ function generateCreateTableSQL(
   const columns = headers.map((header, i) => {
     let type = inferTypeFromValue(firstRow[i]);
     const quotedHeader = `"${header}"`; // quote column names for safety
+
+// Why need quote column names:
+// Example: const headers = ["First Name", "user.id", "2024-Revenue"]
+// Without quotes in SQL: "First Name" → SQL sees: First (something) Name (something) 
+// With quotes (safe): Result: [' "First Name" ', ' "user.id" ', ' "2024-Revenue" ']
+// SQL: "First Name" (treated as single identifier)
     
     // special handling for ID columns - make them primary keys
     if (header.toLowerCase() === "id") {
@@ -163,10 +169,18 @@ async function seedLocalWithCOPY() {
       console.log(`  Importing data...`);
       
       // prepare column names for COPY command
+      // converts headers to strings joined by ,
       const quotedHeaders = headers.map((h) => `"${h}"`).join(", ");
       
-      // use PostgreSQL COPY command for fast bulk import
-      // FROM STDIN = read from stream, CSV HEADER = skip 1st row (headers)
+// COPY "allTrustControls": Copy data into table named allTrustControls
+// ("id","category","short",etc.):
+// These columns in the database table will receive data
+// Column 1 → "id"
+// Column 2 → "category"
+// Column 3 → "short"
+// Etc.
+// FROM STDIN: PostgreSQL says "Send me CSV data through a stream"
+// CSV HEADER: "The 1st line of data contains column names, skip it when inserting"
       const copyStream = client.query(
         from(`COPY ${tableName}(${quotedHeaders}) FROM STDIN CSV HEADER`)
       );
