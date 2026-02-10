@@ -1,4 +1,4 @@
-import { dockerPool } from "./db_connect_agnostic.js"; // use Docker local connection
+import { dockerPool } from "./db_connect_agnostic.js"; 
 import fs from 'fs';
 import path from "path";
 import { fileURLToPath } from "url";

@@ -1,75 +1,20 @@
-# React + TypeScript + Vite
+# React + TypeScript + Vite + Docker + PostgreSQL
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This template provides a minimal setup to get the dockerized application running.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+# Executing npm run devo command for application startup
 
-## React Compiler
+1. Make sure docker engine is running either through docker engine itself or with an active docker desktop
+2. in the root directory (e.g c:\username\Project) execute command "npm run devo" which will execute "npm install" which will install all necessary node modules and dev dependencies. Then it will execute docker compose up -d in the command line interface which will build and start all services defined in the docker-compose.yaml file (including frontend, backend, and database), install dependencies as specified in the Dockerfile during the build process. Then it will execute in the CLI which will run the src/server/sql_db/convertData_agnostic.ts file which will convert all JSON files from src/server/data folder into [originalFileName].csv files
+3. Then it will execute npm run seed-agno which will seed the local postgreSQL database on port 5432 with the data from all the converted .csv files.
+4. Finally it will run npm run types-agno which will generate Typescript schemas from database data
+5. Then the docker container monitor for file changes to automatically sync updates to running containers without manual rebuilds.
+6. You can visit local host 5173 to view the active application you should see trust controls and FAQs with the appropriate data fetched from the offline postgreSQL database
+7. The key word search will be displayed in the top of the page and it should be used for filtering simple categories.
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+# Executing npm run tear command for docker container teardown
 
-Note: This will impact Vite dev & build performances.
+This will run docker compose down in the command line interface (cli)
 
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
-
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
-
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+Then run docker system prune –all --volumes –force in the CLI which removes all unused containers, networks, images (both dangling and unused), and optionally, volumes. **(this is to be used for this project so be very careful if other docker containers and volumes are present)**
