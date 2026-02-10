@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import { Parser } from '@json2csv/plainjs';
-// https://www.npmjs.com/package/json2csv
+// use json2csv module: https://www.npmjs.com/package/@json2csv/plainjs 
 
 
 // define paths
@@ -39,7 +39,8 @@ export async function convertRelayJSONToCSV(
   const fields = Object.keys(nodes[0]); // get fields from only 1st node (assumes all other nodes have SAME fields)
   
   // use json2csv to parse
-  const parser = new Parser({ fields });
+  // In @json2csv/plainjs, the option fields defaults to "toplevel JSON attributes" (also described as auto-detection), which means the parser automatically identifies the keys present in the root of the input JSON objects and uses them as the CSV column headers. 
+  const parser = new Parser({ fields }); 
   const csvContent = parser.parse(nodes);
   
   return {
