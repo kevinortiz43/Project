@@ -50,6 +50,7 @@ function getCSVHeadersAndFirstRow(csvPath: string): {
 }
 
 // infer PostgreSQL data type from value
+// Note: This does not detect all SQL data types, i.e. BIGINT, REAL, etc. only common ones 
 function inferTypeFromValue(value: string): string {
   if (!value) return "TEXT"; // empty/null values default to TEXT
   

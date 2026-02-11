@@ -73,6 +73,11 @@ async function generateTypesFromDocker() {
 }
 
 // helper: map PostgreSQL data types to TypeScript types
+
+// also seems to be a bug with typing varchar -> 'string' (fix if time permits)
+
+// Note: This is not an exhaustive list of all data types, i.e. BIGINT, REAL, etc. only most common types. Can add more types as needed
+
 function mapPgTypeToTs(pgType: string, columnName?: string): string {
   // mapping dictionary: PostgreSQL type → TypeScript type
   const typeMap: Record<string, string> = {
