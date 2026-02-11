@@ -7,9 +7,10 @@ import { dataService } from "../caching/dataService";
 
 const router = express.Router();
 
-router.get("/test", (_, res) => {
-  return res.status(200).send("Endpoint Test");
-});
+// This endpoint is used for postman testing 
+// router.get("/test", (_, res) => {
+//   return res.status(200).send("Endpoint Test");
+// });
 
 router.get("/trustControls", trustController.getTrustControls, (_, res) => {
   const controlsData = res.locals.dbResults;
