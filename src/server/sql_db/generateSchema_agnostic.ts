@@ -1,7 +1,7 @@
-import { dockerPool } from "./db_connect_agnostic.js";
-import fs from "fs";
-import path from "path";
-import { fileURLToPath } from "url";
+import { dockerPool } from './db_connect_agnostic.js';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 // OS-agnostic path setup
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -19,7 +19,7 @@ async function generateTypesFromDocker() {
     `);
 
     // start building TypeScript interface content
-    let typesContent = "\n\nexport interface DockerDatabase {\n";
+    let typesContent = '\n\nexport interface DockerDatabase {\n';
 
     // iterate through each table to get its column definitions
     for (const { table_name } of tables) {
@@ -34,7 +34,7 @@ async function generateTypesFromDocker() {
           AND table_name = $1
         ORDER BY ordinal_position
       `,
-        [table_name],
+        [table_name]
       );
 
       // add table interface to TypeScript content
@@ -46,7 +46,7 @@ async function generateTypesFromDocker() {
         const tsType = mapPgTypeToTs(col.data_type, col.column_name);
 
         // mark as optional if column allows NULL values
-        const optional = col.is_nullable === "YES" ? "?" : "";
+        const optional = col.is_nullable === 'YES' ? '?' : '';
 
         // add column definition: name(optional): type;
         typesContent += `    ${col.column_name}${optional}: ${tsType};\n`;
@@ -55,19 +55,19 @@ async function generateTypesFromDocker() {
       typesContent += `  };\n`;
     }
 
-    typesContent += "}\n";
+    typesContent += '}\n';
 
     // write TypeScript types to file with OS-agnostic path
     // schemas-agnostic.ts will contain auto-generated TypeScript interfaces
-    const outputPath = path.join(__dirname, "schemas-agnostic.ts");
-    fs.writeFileSync(outputPath, typesContent, { encoding: "utf8" });
+    const outputPath = path.join(__dirname, 'schemas-agnostic.ts');
+    fs.writeFileSync(outputPath, typesContent, { encoding: 'utf8' });
 
     console.log(
-      `Generated Docker types for ${tables.length} tables at ${outputPath}`,
+      `Generated Docker types for ${tables.length} tables at ${outputPath}`
     );
     await dockerPool.end(); // close database connection pool
   } catch (error) {
-    console.error("Failed to generate Docker types:", error);
+    console.error('Failed to generate Docker types:', error);
     process.exit(1); // exit with error code on failure
   }
 }
@@ -81,29 +81,29 @@ async function generateTypesFromDocker() {
 function mapPgTypeToTs(pgType: string, columnName?: string): string {
   // mapping dictionary: PostgreSQL type → TypeScript type
   const typeMap: Record<string, string> = {
-    integer: "number",
-    numeric: "number",
-    boolean: "boolean",
-    text: "string",
-    varchar: "string",
-    uuid: "string",
-    "timestamp without time zone": "Date",
-    "timestamp with time zone": "Date",
-    timestamp: "Date",
-    timestamptz: "Date",
-    date: "Date",
-    json: "any",
-    jsonb: "any",
+    integer: 'number',
+    numeric: 'number',
+    boolean: 'boolean',
+    text: 'string',
+    varchar: 'string',
+    uuid: 'string',
+    'timestamp without time zone': 'Date',
+    'timestamp with time zone': 'Date',
+    timestamp: 'Date',
+    timestamptz: 'Date',
+    date: 'Date',
+    json: 'any',
+    jsonb: 'any'
   };
 
   // special handling for categories columns (e.g., from CSV import)
   // categories columns contain JSONB arrays that should be typed as string[]
-  if (pgType === "jsonb" && columnName?.toLowerCase().includes("categor")) {
-    return "string[]"; // Your categories are string arrays
+  if (pgType === 'jsonb' && columnName?.toLowerCase().includes('categor')) {
+    return 'string[]'; // Your categories are string arrays
   }
 
   // return mapped type or 'any' for unknown types
-  return typeMap[pgType] || "any";
+  return typeMap[pgType] || 'any';
 }
 
 // OS-agnostic standalone script detection

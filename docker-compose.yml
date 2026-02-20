@@ -4,11 +4,11 @@ services:
       context: .
       target: dev
     ports:
-      - "5173:5173"
+      - '5173:5173'
     environment:
       - NODE_ENV=development
       - VITE_API_URL=http://localhost:3000
-    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    command: ['npm', 'run', 'dev', '--', '--host', '0.0.0.0']
     develop:
       watch:
         - action: sync
@@ -36,7 +36,7 @@ services:
       context: .
       target: dev
     ports:
-      - "3000:3000"
+      - '3000:3000'
     environment:
       - DATABASE_URL=postgresql://root:root@db:5432/test_db
       - NODE_ENV=development
@@ -46,15 +46,15 @@ services:
       - DB_NAME=test_db
       - DB_USER=root
       - DB_PASSWORD=root
-    command: ["npm", "run", "server"]
+    command: ['npm', 'run', 'server']
     develop:
       watch:
         - action: sync+restart
           path: ./src/server
           target: /app/src/server
           ignore:
-            - "**/*.log"
-            - "**/*.tmp"
+            - '**/*.log'
+            - '**/*.tmp'
         - action: sync+restart
           path: ./src/shared
           target: /app/src/shared
@@ -74,7 +74,7 @@ services:
       POSTGRES_PASSWORD: root
       POSTGRES_DB: test_db
     ports:
-      - "5432:5432"
+      - '5432:5432'
     networks:
       - app-network
     volumes:
@@ -88,7 +88,7 @@ services:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: root
     ports:
-      - "5050:80"
+      - '5050:80'
     depends_on:
       - db
     networks:

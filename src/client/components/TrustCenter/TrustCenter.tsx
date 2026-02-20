@@ -1,12 +1,12 @@
-import "../../App.css";
+import '../../App.css';
 
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleQuestion,
-  faChevronDown,
-} from "@fortawesome/free-solid-svg-icons";
-import "./TrustCenter.css";
+  faChevronDown
+} from '@fortawesome/free-solid-svg-icons';
+import './TrustCenter.css';
 
 interface Trust {
   id: string;
@@ -20,39 +20,36 @@ interface Trust {
   updatedBy?: string;
 }
 
-
 interface TrustCenterProps {
   selectedCategories: string[];
 }
 
-
 const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
-  const [trusts, setTrusts] = useState<Trust[]>([]); 
-  const [filteredTrusts, setFilteredTrusts] = useState<Trust[]>([]); 
-  const [expandedId, setExpandedId] = useState<string | null>(null); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [trusts, setTrusts] = useState<Trust[]>([]);
+  const [filteredTrusts, setFilteredTrusts] = useState<Trust[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTrusts = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/trustControls");
+        const response = await fetch('http://localhost:3000/api/trustControls');
 
-        if (!response.ok) throw new Error("Failed to fetch Trust Controls");
+        if (!response.ok) throw new Error('Failed to fetch Trust Controls');
 
         const infoObj = await response.json();
 
-        console.log("infoObj: ", infoObj);
-
+        console.log('infoObj: ', infoObj);
 
         setTrusts(infoObj.data);
-        setFilteredTrusts(infoObj.data); 
+        setFilteredTrusts(infoObj.data);
         setLoading(false);
       } catch (err) {
         if (err && err.message) {
           setError(err.message);
         } else {
-          setError("An error occurred");
+          setError('An error occurred');
         }
         setLoading(false);
       }
@@ -63,22 +60,22 @@ const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
 
   useEffect(() => {
     if (selectedCategories.length === 0) {
-      setFilteredTrusts(trusts); 
+      setFilteredTrusts(trusts);
     } else {
-      const filtered = trusts.filter(trust => 
+      const filtered = trusts.filter(trust =>
         selectedCategories.includes(trust.category)
       );
       setFilteredTrusts(filtered);
     }
-  }, [selectedCategories, trusts]); 
+  }, [selectedCategories, trusts]);
   const toggleTrust = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
   };
 
   if (loading)
-    return <div className="trusts_container">Loading Trust Controls...</div>; 
-  if (error) return <div className="trusts_container">Error: {error}</div>; 
-  
+    return <div className="trusts_container">Loading Trust Controls...</div>;
+  if (error) return <div className="trusts_container">Error: {error}</div>;
+
   return (
     <div className="trusts_container">
       <div className="trusts_header">
@@ -91,10 +88,10 @@ const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
         </div>
       ) : (
         <div className="trusts_list">
-          {filteredTrusts.map((trust) => (
+          {filteredTrusts.map(trust => (
             <div key={trust.id} className="trust_card">
               <button
-                className={`trust_button ${expandedId === trust.id ? "active" : ""}`}
+                className={`trust_button ${expandedId === trust.id ? 'active' : ''}`}
                 onClick={() => toggleTrust(trust.id)}
                 aria-expanded={expandedId === trust.id}
               >
@@ -110,7 +107,7 @@ const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
                   </div>
                   <FontAwesomeIcon
                     icon={faChevronDown}
-                    className={`trust_chevron ${expandedId === trust.id ? "rotated" : ""}`}
+                    className={`trust_chevron ${expandedId === trust.id ? 'rotated' : ''}`}
                   />
                 </div>
               </button>

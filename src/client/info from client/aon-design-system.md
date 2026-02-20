@@ -1,6 +1,6 @@
 # Aon Design System
 
-<https://designsystem.aon.com/>  
+<https://designsystem.aon.com/>
 
 Restrictions:
 

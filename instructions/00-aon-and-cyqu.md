@@ -15,21 +15,21 @@ The Cyber Quotient Evaluation (CyQu) is Aon's proprietary eSubmission platform t
 ### Key Features
 
 - **Insurance Application Support**: Includes multiple insurance application question sets to support:
-
   - Cyber insurance placements
   - Errors & Omissions (E&O) insurance
   - Professional Liability insurance
-- **Cyber Maturity Assessment**: Helps clients:
 
+- **Cyber Maturity Assessment**: Helps clients:
   - Identify gaps in performance
   - Prioritize security spend
   - Measure year-over-year changes in cyber maturity
-- **Nine Critical Control Areas**: The platform evaluates cyber maturity across nine critical control areas including:
 
+- **Nine Critical Control Areas**: The platform evaluates cyber maturity across nine critical control areas including:
   - Endpoint and Systems Security
   - Data Protection
   - Business Resilience
   - (And six additional control areas)
+
 - **Benchmarking**: Provides instant access to industry peer and target benchmarks, giving clients clear insights into how they compare across the critical controls
 
 ### Why CyQu Matters
