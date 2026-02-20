@@ -5,6 +5,7 @@
   text-align: center;
 }
 
+/* REVIEW: Vite boilerplate - .logo, logo-spin unused; delete lines 8-34 */
 .logo {
   height: 6em;
   padding: 1.5em;
@@ -137,6 +138,7 @@
   padding-left: 0;
 }
 
+/* REVIEW: Duplicate .item-answer rule - see also lines 183-185 */
 .accordion {
   text-align: left;
 }
@@ -203,6 +205,7 @@
   justify-content: flex-start;
 }
 
+/* REVIEW: Consolidate with 800px breakpoint - two breakpoints for same grid behavior */
 @media (max-width: 900px) {
   .trustFaqs_grid {
     grid-template-columns: 1fr;

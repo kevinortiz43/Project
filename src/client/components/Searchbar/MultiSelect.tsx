@@ -5,6 +5,7 @@ interface MultiSelectProps {
 }
 
 const MultiSelect: React.FC<MultiSelectProps> = ({ onFilterChange }) => {
+  // REVIEW: Move options outside component to avoid re-creation on every render
   const options = [
     { value: 'Organizational Security', label: 'Organizational Security' },
     { value: 'Cloud Security', label: 'Cloud Security' },

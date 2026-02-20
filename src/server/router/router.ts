@@ -11,6 +11,7 @@ router.get('/test', (_, res) => {
   return res.status(200).send('Endpoint Test');
 });
 
+// REVIEW: Three handlers share identical response shape - extract sendDataResponse(res) helper
 router.get('/trustControls', trustController.getTrustControls, (_, res) => {
   const controlsData = res.locals.dbResults;
   const cacheInfo = res.locals.cacheInfo || {

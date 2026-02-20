@@ -18,6 +18,7 @@ const dockerPool = new Pool({
 dockerPool.connect((err, client, release) => {
   if (err) {
     console.error('Error connecting to Docker PostgreSQL:', err.message);
+    // REVIEW: Connection details may include credentials - avoid logging in production
     console.error('Connection details:', {
       host: process.env.DB_HOST || (isRunningInDocker ? 'db' : 'localhost'),
       port: parseInt(process.env.DB_PORT || '5432'),
@@ -32,6 +33,7 @@ dockerPool.connect((err, client, release) => {
 export default {
   query: (text: string, params?: any[]): Promise<QueryResult<any>> => {
     console.log('executed query', text);
+    // REVIEW: Logging every query is noisy; may expose sensitive data in production
     return dockerPool.query(text, params);
   }
 };

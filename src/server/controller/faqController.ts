@@ -1,7 +1,9 @@
 import { dataService } from '../caching/dataService';
 
+// REVIEW: Structurally identical to trustController/teamsController - replace with factory makeController(method)
 export default {
   getTrustFaqs: async (_, res, next) => {
+    // REVIEW: Add explicit Express types: Request, Response, NextFunction
     try {
       const result = await dataService.getFaqs();
 

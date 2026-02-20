@@ -1,5 +1,7 @@
 /* TrustCenter.css */
+/* REVIEW: Set font-family once on .trusts_container; repeated on 6+ selectors */
 .trusts_container {
+  /* REVIEW: Use CSS custom properties for colors/spacing - hardcoded values hurt theming */
   display: flex;
   flex-direction: column;
   gap: 24px;
@@ -133,6 +135,7 @@
   font-family: Arial, sans-serif;
 }
 
+/* REVIEW: slideDown duplicated in Faqs.css - move to shared CSS file */
 @keyframes slideDown {
   from {
     opacity: 0;
@@ -148,6 +151,7 @@
   .trusts_header {
     padding: 24px;
   }
+  /* REVIEW: .trusts_header padding overridden twice in same media block */
 
   .trusts_title {
     font-size: 24px;

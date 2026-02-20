@@ -13,6 +13,7 @@ interface FAQ {
   category: string;
   searchText: string;
   createdat?: string;
+  // REVIEW: Inconsistent casing - Trust uses createdAt; align with schema
   updatedat?: string;
   updatedBy?: string;
 }
@@ -23,6 +24,7 @@ interface FaqProps {
 const Faqs: React.FC<FaqProps> = ({ selectedCategories }) => {
   const [faqs, setFaqs] = useState<FAQ[]>([]);
   const [filteredFaqs, setFilteredFaqs] = useState<FAQ[]>([]);
+  // REVIEW: filteredFaqs is derived - use useMemo instead of duplicate state
 
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
@@ -32,6 +34,7 @@ const Faqs: React.FC<FaqProps> = ({ selectedCategories }) => {
     const fetchFaqs = async () => {
       try {
         const response = await fetch('http://localhost:3000/api/trustFaqs');
+        // REVIEW: Hardcoded URL - use import.meta.env.VITE_API_URL
 
         if (!response.ok) throw new Error('Failed to fetch FAQs');
 
@@ -39,8 +42,10 @@ const Faqs: React.FC<FaqProps> = ({ selectedCategories }) => {
 
         setFaqs(infoObj.data);
         setFaqs(infoObj.data);
+        // REVIEW: Bug - setFaqs called twice; remove duplicate
         setLoading(false);
       } catch (err) {
+        // REVIEW: Use err instanceof Error for proper TS narrowing of unknown
         if (err && err.message) {
           setError(err.message);
         } else {
