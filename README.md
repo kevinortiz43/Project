@@ -22,5 +22,5 @@
 # Executing "npm run tear" command for docker container teardown
 
 12. This will run "docker compose down" in the CLI.
-13. Then it will run "docker system prune –all --volumes –force"  which removes all unused containers, networks, images (both dangling and unused), and optionally, volumes.
+13. Then it will run "docker system prune –all --volumes –force" which removes all unused containers, networks, images (both dangling and unused), and optionally, volumes.
     **IMPORTANT: If you have other Docker containers and volumes present for other projects, be very careful when using this command since it will delete ALL docker containers regardless of project.**

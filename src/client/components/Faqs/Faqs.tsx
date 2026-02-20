@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faCircleQuestion,
-  faChevronDown,
-} from "@fortawesome/free-solid-svg-icons";
-import "./Faqs.css";
+  faChevronDown
+} from '@fortawesome/free-solid-svg-icons';
+import './Faqs.css';
 
 interface FAQ {
   id: string;
@@ -20,31 +20,31 @@ interface FaqProps {
   selectedCategories: string[];
 }
 
-const Faqs: React.FC<FaqProps> =({ selectedCategories }) => {
-  const [faqs, setFaqs] = useState<FAQ[]>([]); 
-  const [filteredFaqs, setFilteredFaqs] = useState<FAQ[]>([]); 
-  
-  const [expandedId, setExpandedId] = useState<string | null>(null); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState<string | null>(null); 
+const Faqs: React.FC<FaqProps> = ({ selectedCategories }) => {
+  const [faqs, setFaqs] = useState<FAQ[]>([]);
+  const [filteredFaqs, setFilteredFaqs] = useState<FAQ[]>([]);
+
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchFaqs = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/trustFaqs");
-        
-        if (!response.ok) throw new Error("Failed to fetch FAQs");
+        const response = await fetch('http://localhost:3000/api/trustFaqs');
+
+        if (!response.ok) throw new Error('Failed to fetch FAQs');
 
         const infoObj = await response.json();
 
         setFaqs(infoObj.data);
-        setFaqs(infoObj.data); 
+        setFaqs(infoObj.data);
         setLoading(false);
       } catch (err) {
         if (err && err.message) {
           setError(err.message);
         } else {
-          setError("An error occurred");
+          setError('An error occurred');
         }
         setLoading(false);
       }
@@ -53,25 +53,24 @@ const Faqs: React.FC<FaqProps> =({ selectedCategories }) => {
     fetchFaqs();
   }, []);
 
-
   useEffect(() => {
     if (selectedCategories.length === 0) {
       setFilteredFaqs(faqs);
     } else {
-      const filtered = faqs.filter(faq => 
+      const filtered = faqs.filter(faq =>
         selectedCategories.includes(faq.category)
       );
       setFilteredFaqs(filtered);
     }
-  }, [selectedCategories, faqs]); 
-  
+  }, [selectedCategories, faqs]);
+
   const toggleFaq = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
   };
 
-  if (loading) return <div className="faqs_container">Loading FAQs...</div>; 
-  
-  if (error) return <div className="faqs_container">Error: {error}</div>; 
+  if (loading) return <div className="faqs_container">Loading FAQs...</div>;
+
+  if (error) return <div className="faqs_container">Error: {error}</div>;
 
   return (
     <div className="faqs_container">
@@ -80,15 +79,13 @@ const Faqs: React.FC<FaqProps> =({ selectedCategories }) => {
       </div>
 
       {selectedCategories.length > 0 && filteredFaqs.length === 0 ? (
-        <div className="no-results">
-          No FAQs match the selected categories.
-        </div>
+        <div className="no-results">No FAQs match the selected categories.</div>
       ) : (
         <div className="faqs_list">
-          {filteredFaqs.map((faq) => ( 
+          {filteredFaqs.map(faq => (
             <div key={faq.id} className="faq_card">
               <button
-                className={`faq_button ${expandedId === faq.id ? "active" : ""}`}
+                className={`faq_button ${expandedId === faq.id ? 'active' : ''}`}
                 onClick={() => toggleFaq(faq.id)}
                 aria-expanded={expandedId === faq.id}
               >
@@ -104,7 +101,7 @@ const Faqs: React.FC<FaqProps> =({ selectedCategories }) => {
                   </div>
                   <FontAwesomeIcon
                     icon={faChevronDown}
-                    className={`faq_chevron ${expandedId === faq.id ? "rotated" : ""}`}
+                    className={`faq_chevron ${expandedId === faq.id ? 'rotated' : ''}`}
                   />
                 </div>
               </button>

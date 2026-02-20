@@ -1,9 +1,9 @@
-import  { useState } from "react";
-import "./App.css";
-import Faqs from "./components/Faqs/Faqs";
-import SearchBar from "./components/Searchbar/SearchBar";
-import TrustCenter from "./components/TrustCenter/TrustCenter";
-import MultiSelect from "./components/Searchbar/MultiSelect";
+import { useState } from 'react';
+import './App.css';
+import Faqs from './components/Faqs/Faqs';
+import SearchBar from './components/Searchbar/SearchBar';
+import TrustCenter from './components/TrustCenter/TrustCenter';
+import MultiSelect from './components/Searchbar/MultiSelect';
 
 export default function App() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
