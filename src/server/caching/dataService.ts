@@ -13,11 +13,13 @@ export const CacheKeys = {
 
 export const dataService = {
   // GET with cache
+  // REVIEW: getTeams/getControls/getFaqs near-identical - extract generic fetchWithCache(key, query) helper
   async getTeams() {
     const cached = getCache(CacheKeys.TEAMS_ALL);
 
     if (cached) {
       console.log('Cache teams HIT');
+      // REVIEW: Use proper logger or consistent log-level strategy
       return { data: cached, source: 'cache' };
     }
 
@@ -30,6 +32,7 @@ export const dataService = {
     // for testing, set to 5 minutes
 
     setCache(CacheKeys.TEAMS_ALL, data, 300);
+    // REVIEW: TTL 300 hardcoded in 3 places - use named constant
 
     return { data, source: 'database' };
   },
@@ -45,6 +48,7 @@ export const dataService = {
     const result = await dockerPool.query('SELECT * FROM "allTrustControls"');
     const data = result.rows;
 
+    // REVIEW: TTL 300 hardcoded in 3 places - use named constant
     setCache(CacheKeys.CONTROLS_ALL, data, 300);
 
     return { data, source: 'database' };
@@ -61,6 +65,7 @@ export const dataService = {
     const result = await dockerPool.query('SELECT * FROM "allTrustFaqs"');
     const data = result.rows;
 
+    // REVIEW: TTL 300 hardcoded in 3 places - use named constant
     setCache(CacheKeys.FAQS_ALL, data, 300);
 
     return { data, source: 'database' };

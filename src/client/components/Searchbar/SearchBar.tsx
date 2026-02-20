@@ -1,6 +1,7 @@
 import './SearchBar.css';
 
 import MultiSelect from './MultiSelect';
+// REVIEW: Entire file is dead code - onFilterChange throws, input unwired, never rendered
 
 const SearchBar = () => {
   return (

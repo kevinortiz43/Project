@@ -19,6 +19,9 @@ export function getCache<T>(key: string): T | undefined {
 
 // set cache with optional TTL (use ttl if provided, otherwise use default stdTTL)
 export function setCache<T>(key: string, data: T, ttl?: number): boolean {
+  // REVIEW: Number(undefined) is NaN → node-cache treats it as 0 (immediate expiration), not stdTTL fallback; conditionally pass ttl only when defined
+  // Possible bug: setCache with undefined TTL breaks node-cache
+  // return ttl !== undefined ? cache.set(key, data, ttl) : cache.set(key, data);
   return cache.set(key, data, Number(ttl));
 }
 
@@ -32,6 +35,7 @@ export function getCacheStats() {
     keys: cache.keys().length, // global key count
     hits: stats.hits || 0, // global hit count
     misses: stats.misses || 0, // global miss count
+    // REVIEW: ksize uses stats.keys (count) but should use stats.ksize (byte size) - they're swapped
     ksize: stats.keys || 0, // global key size count in approximately bytes
     vsize: stats.vsize || 0 // global value size count in approximately byte
   };
@@ -41,9 +45,11 @@ export function getCacheStats() {
 export function clearCache(key?: string) {
   if (key) {
     cache.del(key);
+    // REVIEW: getCacheStats() return value ignored - pointless call
     getCacheStats();
   } else {
     cache.flushAll();
+    // REVIEW: getCacheStats() return value ignored - pointless call
     getCacheStats();
   }
 }

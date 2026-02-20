@@ -35,17 +35,19 @@ const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
     const fetchTrusts = async () => {
       try {
         const response = await fetch('http://localhost:3000/api/trustControls');
+        // REVIEW: Hardcoded URL - use import.meta.env.VITE_API_URL
 
         if (!response.ok) throw new Error('Failed to fetch Trust Controls');
 
         const infoObj = await response.json();
-
         console.log('infoObj: ', infoObj);
+        // REVIEW: Always remove debug logging before merging to main
 
         setTrusts(infoObj.data);
         setFilteredTrusts(infoObj.data);
         setLoading(false);
       } catch (err) {
+        // REVIEW: Use err instanceof Error for proper TS narrowing of unknown
         if (err && err.message) {
           setError(err.message);
         } else {
@@ -68,6 +70,7 @@ const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
       setFilteredTrusts(filtered);
     }
   }, [selectedCategories, trusts]);
+  // REVIEW: Filtering + accordion logic duplicated from Faqs.tsx - extract shared hook/component
   const toggleTrust = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
   };

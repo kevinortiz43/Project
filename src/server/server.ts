@@ -8,12 +8,14 @@ const PORT = process.env.PORT || 3000;
 const app = express();
 const corsOptions = {
   origin: 'http://localhost:5173',
+  // REVIEW: Hardcoded origin - use process.env.CORS_ORIGIN
   optionsSuccessStatus: 200
 };
 
 app.use(cors(corsOptions));
 
 app.use(express.json());
+// REVIEW: express.json() called twice; urlencoded registered after routes - middleware order matters
 
 app.use('/api', router);
 
