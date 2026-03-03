@@ -1,89 +1,159 @@
-import express from "express";
-import faqController from "../controller/faqController";
-import trustController from "../controller/trustController";
-import teamsController from "../controller/teamsController";
-import { getCacheStats } from "../caching/cache";
+import { Elysia, t } from "elysia";
 import { dataService } from "../caching/dataService";
+import { getCacheStats } from "../caching/cache";
+import { databaseQuery } from "../controller/AI_Controller/databaseController";
+import { generateAIResponse } from "../controller/AI_Controller/generateAIResponse";
+import { QueryOpenAI } from "../controller/AI_Controller/onlineAIController";
 
-const router = express.Router();
+export const router = new Elysia();
 
-router.get("/test", (_, res) => {
-  return res.status(200).send("Endpoint Test");
+router.get("test", ({ set }) => {
+  set.status = 201;
+  return "Testing HTTP /api/tests";
 });
 
-router.get("/trustControls", trustController.getTrustControls, (_, res) => {
-  const controlsData = res.locals.dbResults;
-  const cacheInfo = res.locals.cacheInfo || {
-    source: "unknown",
-    cached: false,
-  };
+router.get("/trustControls", async ({ set }) => {
+  try {
+    const result = await dataService.getControls();
 
-  return res.json({
-    source: cacheInfo.source,
-    data: controlsData,
-    cached: cacheInfo.cached,
-    timestamp: new Date().toISOString(),
-  });
+    if (!result) {
+      set.status = 404;
+      return { message: "No Trust Controls data found" };
+    }
+
+    return {
+      source: result.source,
+      data: result.data,
+      cached: result.source === "cache",
+      timestamp: new Date().toISOString(),
+    };
+  } catch (err) {
+    console.error(
+      `Error in Trust Controls route: ${err instanceof Error ? err.message : "Unknown error"}`,
+    );
+    set.status = 500;
+    return { error: "Failed to retrieve Trust Controls data" };
+  }
 });
 
-router.get("/allTeams", teamsController.getTeams, (_, res) => {
-  const teamsData = res.locals.dbResults;
-  const cacheInfo = res.locals.cacheInfo || {
-    source: "unknown",
-    cached: false,
-  };
+router.post(
+  "/ai-online",
+  async ({ body, set }) => {
+    try {
+      const { naturalLanguageQuery } = body;
+      const { cleanSQL } = await QueryOpenAI({
+        naturalLanguageQuery,
+        sqlQuery: "",
+      });
 
-  return res.json({
-    source: cacheInfo.source,
-    data: teamsData,
-    cached: cacheInfo.cached,
-    timestamp: new Date().toISOString(),
-  });
+      if (!cleanSQL) {
+        set.status = 500;
+        return { error: "Failed to generate SQL query" };
+      }
+
+      const { rows } = await databaseQuery(cleanSQL);
+
+      return await generateAIResponse({
+        naturalLanguageQuery,
+        databaseQueryResult: rows,
+        sqlQuery: cleanSQL,
+      });
+    } catch (_error) {
+      set.status = 500;
+      return { error: "Failed to process AI query" };
+    }
+  },
+  {
+    body: t.Object({
+      naturalLanguageQuery: t.String(),
+    }),
+  },
+);
+
+router.get("/allTeams", async ({ set }) => {
+  try {
+    const result = await dataService.getTeams();
+
+    if (!result) {
+      set.status = 404;
+      return { message: "No All Teams data found" };
+    }
+
+    return {
+      source: result.source,
+      data: result.data,
+      cached: result.source === "cache",
+      timestamp: new Date().toISOString(),
+    };
+  } catch (err) {
+    console.error(
+      `Error in Trust Controls route: ${err instanceof Error ? err.message : "Unknown error"}`,
+    );
+    set.status = 500;
+    return { error: "Failed to retrieve All Teams data" };
+  }
 });
 
-router.get("/trustFaqs", faqController.getTrustFaqs, (_, res) => {
-  const faqsData = res.locals.dbResults;
-  const cacheInfo = res.locals.cacheInfo || {
-    source: "unknown",
-    cached: false,
-  };
+router.get("/trustFaqs", async ({ set }) => {
+  try {
+    const result = await dataService.getFaqs();
 
-  return res.json({
-    source: cacheInfo.source,
-    data: faqsData,
-    cached: cacheInfo.cached,
-    timestamp: new Date().toISOString(),
-  });
+    if (!result) {
+      set.status = 404;
+      return { message: "No FAQs data found" };
+    }
+
+    return {
+      source: result.source,
+      data: result.data,
+      cached: result.source === "cache",
+      timestamp: new Date().toISOString(),
+    };
+  } catch (err) {
+    console.error(
+      `Error in Trust Controls route: ${err instanceof Error ? err.message : "Unknown error"}`,
+    );
+    set.status = 500;
+    return { error: "Failed to retrieve FAQs data" };
+  }
 });
 
-router.post("/admin/clear-cache", (req, res) => {
-  const { type } = req.body;
+router.post(
+  "/admin/clear-cache",
+  ({ body }) => {
+    const { type } = body;
 
-  dataService.clearCache(type);
-  const statsReset = getCacheStats();
+    dataService.clearCache(type);
+    const statsReset = getCacheStats();
 
-  res.json({
-    success: true,
-    message: type ? `Cache cleared for ${type}` : "All cache cleared",
-    timestamp: new Date().toISOString(),
-    hits: statsReset.hits,
-    misses: statsReset.misses,
-    keys: statsReset.keys,
-    ksize: statsReset.ksize,
-    vsize: statsReset.vsize,
-  });
-});
+    return {
+      success: true,
+      message: type ? `Cache cleared for ${type}` : "All cache cleared",
+      timestamp: new Date().toISOString(),
+      hits: statsReset.hits,
+      misses: statsReset.misses,
+      keys: statsReset.keys,
+      ksize: statsReset.ksize,
+      vsize: statsReset.vsize,
+    };
+  },
+  {
+    body: t.Object({
+      type: t.Optional(
+        t.Union([t.Literal("teams"), t.Literal("controls"), t.Literal("faqs")]),
+      ),
+    }),
+  },
+);
 
-// Note: This route is still buggy (only fix if have time)
-router.get("/admin/cache-stats", (_, res) => {
+router.get("/admin/cache-stats", () => {
   const stats = getCacheStats();
-  res.json({
+
+  return {
     hits: stats.hits,
     misses: stats.misses,
     keys: stats.keys,
     ksize: stats.ksize,
     vsize: stats.vsize,
-  });
+  };
 });
-
-export default router;
