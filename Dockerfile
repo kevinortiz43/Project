@@ -1,46 +1,46 @@
-# Base stage with dependencies
-FROM node:25.5.0-bullseye-slim AS base
+# Base stage
+FROM oven/bun:canary-alpine AS base
 WORKDIR /app
 
+# Builder stage
 FROM base AS builder
 WORKDIR /app
-COPY package*.json ./
-RUN npm ci
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile
 COPY . .
-RUN npm run build
+RUN bun run build
 
+# Production stage
 FROM base AS production
 WORKDIR /app
 
-ENV NODE_ENV=production
+ENV BUN_ENV=production
 
-COPY package*.json ./
-RUN npm ci --only=production
+COPY package.json bun.lock ./
+RUN bun install --frozen-lockfile --production
 
-RUN addgroup --system --gid 1001 nodejs
+RUN addgroup --system --gid 1001 bunjs
 RUN adduser --system --uid 1001 appuser
-COPY --from=builder --chown=appuser:nodejs /app/dist ./dist
 
-COPY --chown=appuser:nodejs ./src/server ./src/server
-COPY --chown=appuser:nodejs package.json ./
+COPY --from=builder --chown=appuser:bunjs /app/dist ./dist
+COPY --chown=appuser:bunjs ./src/server ./src/server
+COPY --chown=appuser:bunjs package.json ./
 
 USER appuser
-
 EXPOSE 3000
+CMD ["bun", "run", "dev"]
 
-CMD ["npm","run", "dev"]
-
+# Dev stage
 FROM base AS dev
 WORKDIR /app
 
-ENV NODE_ENV=development
+ENV BUN_ENV=development
 
-COPY package*.json ./
-RUN npm install
+COPY package.json bun.lock ./
+RUN bun install
 
 COPY . .
 
 EXPOSE 5173
 EXPOSE 3000
-
-CMD ["npm", "run", "dev"]
+CMD ["bun", "run", "dev"]

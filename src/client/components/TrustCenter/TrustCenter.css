@@ -1,4 +1,4 @@
-/* TrustCenter.css */
+
 .trusts_container {
   display: flex;
   flex-direction: column;
@@ -26,6 +26,8 @@
   margin: 0;
   font-family: Arial, sans-serif;
 }
+
+
 
 .trusts_list {
   display: grid;

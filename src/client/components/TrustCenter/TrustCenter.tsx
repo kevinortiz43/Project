@@ -20,37 +20,31 @@ interface Trust {
   updatedBy?: string;
 }
 
-
 interface TrustCenterProps {
   selectedCategories: string[];
 }
 
-
 const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
-  const [trusts, setTrusts] = useState<Trust[]>([]); 
-  const [filteredTrusts, setFilteredTrusts] = useState<Trust[]>([]); 
-  const [expandedId, setExpandedId] = useState<string | null>(null); 
-  const [loading, setLoading] = useState(true); 
-  const [error, setError] = useState<string | null>(null); 
+  const [trusts, setTrusts] = useState<Trust[]>([]);
+  const [filteredTrusts, setFilteredTrusts] = useState<Trust[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchTrusts = async () => {
       try {
         const response = await fetch("http://localhost:3000/api/trustControls");
-
         if (!response.ok) throw new Error("Failed to fetch Trust Controls");
 
         const infoObj = await response.json();
 
-        console.log("infoObj: ", infoObj);
-
-
         setTrusts(infoObj.data);
         setFilteredTrusts(infoObj.data); 
         setLoading(false);
-      } catch (err) {
-        if (err && err.message) {
-          setError(err.message);
+      } catch (error) {
+        if (error instanceof Error && error.message) {
+          setError(error.message);
         } else {
           setError("An error occurred");
         }
@@ -65,12 +59,13 @@ const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
     if (selectedCategories.length === 0) {
       setFilteredTrusts(trusts); 
     } else {
-      const filtered = trusts.filter(trust => 
-        selectedCategories.includes(trust.category)
+      const filtered = trusts.filter((trust) =>
+        selectedCategories.includes(trust.category),
       );
       setFilteredTrusts(filtered);
     }
   }, [selectedCategories, trusts]); 
+
   const toggleTrust = (id: string) => {
     setExpandedId(expandedId === id ? null : id);
   };
@@ -78,13 +73,14 @@ const TrustCenter: React.FC<TrustCenterProps> = ({ selectedCategories }) => {
   if (loading)
     return <div className="trusts_container">Loading Trust Controls...</div>; 
   if (error) return <div className="trusts_container">Error: {error}</div>; 
-  
+
   return (
     <div className="trusts_container">
       <div className="trusts_header">
         <h1 className="trusts_title">Trust Controls</h1>
       </div>
 
+      {/* Show filter status */}
       {selectedCategories.length > 0 && filteredTrusts.length === 0 ? (
         <div className="no-results">
           No Trust Controls match the selected categories.

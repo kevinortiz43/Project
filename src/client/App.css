@@ -1,3 +1,5 @@
+/* potential bug with root */
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
@@ -49,6 +51,7 @@
   display: none;
   position: absolute;
   background-color: #f9f9f9;
+
   min-width: 130px;
   box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
   padding: 12px 16px;
@@ -66,7 +69,6 @@
   margin: 0 auto;
   padding: 1rem;
 }
-
 .controls-column {
   flex: 1.2 1 0%;
   min-width: 280px;
@@ -76,6 +78,7 @@
   min-width: 240px;
 }
 
+/* stack on small screens */
 @media (max-width: 800px) {
   .two-column {
     flex-direction: column;

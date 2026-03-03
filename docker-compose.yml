@@ -6,9 +6,9 @@ services:
     ports:
       - "5173:5173"
     environment:
-      - NODE_ENV=development
+      - BUN_ENV=development
       - VITE_API_URL=http://localhost:3000
-    command: ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+    command: ["bunx", "vite", "--host", "0.0.0.0"]
     develop:
       watch:
         - action: sync
@@ -46,7 +46,11 @@ services:
       - DB_NAME=test_db
       - DB_USER=root
       - DB_PASSWORD=root
-    command: ["npm", "run", "server"]
+      # Enter the AI API Key HERE
+      # - AI_APIKEY=exampleApiKeyHere
+      - AI_APIKEY=
+
+    command: ["bun", "run", "server"]
     develop:
       watch:
         - action: sync+restart
